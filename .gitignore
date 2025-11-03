@@ -1,0 +1,21 @@
+# Terraform 기본
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+
+# Auto-generated tfvars
+*.auto.tfvars.json
+*.tfvars.json
+terraform.tfvars
+
+# Crash logs
+crash.log
+
+# Sensitive
+.terraform.lock.hcl
+
+# OS/Editor specific
+.DS_Store
+.idea/
+.vscode/
