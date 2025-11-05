@@ -27,3 +27,18 @@ variable "multi_nat" {
   type        = bool
   default     = false
 }
+
+# Database
+# rds instance
+variable "db_username" { type = string }
+variable "db_password" { type = string }
+variable "db_name" { type = string }
+variable "engine_version" { type = string }
+variable "instance_class" { type = string }
+variable "rds_backup_day" { type = number }
+
+# rds proxy
+variable "proxy_idle_client_timeout" { type = number }
+variable "proxy_role_arn" { type = string }
+variable "rds_proxy_secret_arn" { type = string }
+variable "proxy_borrow_timeout" { type = number }
