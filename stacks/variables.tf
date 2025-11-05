@@ -1,0 +1,29 @@
+variable "region"       { type = string }
+variable "name"         { type = string }
+variable "common_tags" {
+  type = map(string)
+  default = {}
+}
+
+# Network
+variable "vpc_cidr" {
+  description = "VPC CIDR 블록"
+  type        = string
+}
+variable "availability_zones" {
+  description = "가용 영역 리스트 (하나 또는 여러 개)"
+  type        = list(string)
+}
+variable "public_subnets_cidr" {
+  description = "퍼블릭 서브넷 CIDR 리스트"
+  type        = list(string)
+}
+variable "private_subnets_cidr" {
+  description = "프라이빗 서브넷 CIDR 리스트"
+  type        = list(string)
+}
+variable "multi_nat" {
+  description = "AZ 별 NAT Gateway 여부"
+  type        = bool
+  default     = false
+}
