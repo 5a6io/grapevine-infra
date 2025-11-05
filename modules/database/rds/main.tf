@@ -76,7 +76,7 @@ resource "aws_db_instance" "this" {
   apply_immediately       = true
   skip_final_snapshot     = true
   parameter_group_name = aws_db_parameter_group.this.name
-  # vpc_security_group_ids  = [var.sg_rds_id]
+  vpc_security_group_ids  = [var.sg_rds_id]
   tags                    = merge(var.common_tags, {
     Name = "${var.name}-rds"
   })
@@ -90,7 +90,7 @@ resource "aws_db_proxy" "this" {
   idle_client_timeout    = var.proxy_idle_client_timeout
   require_tls            = true
   role_arn               = var.proxy_role_arn
-  # vpc_security_group_ids = [var.sg_rds_proxy_id]
+  vpc_security_group_ids = [var.sg_rds_proxy_id]
   vpc_subnet_ids         = var.private_subnet_ids
 
   auth {
