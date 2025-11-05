@@ -1,0 +1,47 @@
+name: ✨ 기능 구현 요청 (Feature Request)
+description: 새로운 기능을 구현하거나 개선할 작업을 등록합니다.
+title: "[Feature] "
+labels: ["feature", "frontend"]
+assignees:
+  - hayeon-k
+
+body:
+  - type: textarea
+    id: feature
+    attributes:
+      label: 🧩 구현할 기능
+      description: 어떤 기능을 추가하거나 수정하려는지 명확히 작성해주세요.
+      placeholder: 예) 배포 로그를 실시간으로 조회하는 기능 추가
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 🛠 상세 작업 요약
+      description: 기능 구현을 위해 필요한 세부 작업 단위나 단계를 작성해주세요.
+      placeholder: |
+        예)
+        - GitHub Actions 로그 조회 API 추가
+        - Vue3 콘솔 UI 추가
+        - 배포 단계별 상태 업데이트 표시
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 📎 참고사항
+      description: 관련 문서, API 스펙, 참고 이슈, PR 등을 링크로 첨부해주세요.
+      placeholder: 예) https://github.com/org/repo/actions/workflows/deploy.yml
+    validations:
+      required: false
+
+  - type: input
+    id: estimated-time
+    attributes:
+      label: ⏱ 예상 소요시간
+      description: 대략적인 작업 예상 시간을 작성해주세요.
+      placeholder: 예) 4시간, 1일, 2일
+    validations:
+      required: false
