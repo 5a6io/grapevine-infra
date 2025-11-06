@@ -104,3 +104,4 @@ resource "aws_vpc_security_group_ingress_rule" "ecs_from_alb" {
   to_port = 80
   ip_protocol = "tcp"
   referenced_security_group_id = aws_security_group.alb.id
+}
