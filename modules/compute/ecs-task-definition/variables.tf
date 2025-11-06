@@ -28,9 +28,9 @@ variable "service_definitions" {
 }
 
 variable "ecs_task_execution_role_arn" {
-  
+  type = string
 }
 
 variable "ecs_task_role_arns" {
-  
+  type = map(string)
 }
