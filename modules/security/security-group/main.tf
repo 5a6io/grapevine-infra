@@ -46,6 +46,31 @@ resource "aws_vpc_security_group_egress_rule" "rds_proxy_all_out" {
   cidr_ipv4         = "0.0.0.0/0"
 }
 
+# VPC Endpoint
+resource "aws_security_group" "vpc_endpoint_sg" {
+  name   = "${var.name}-vpce-sg"
+  vpc_id = var.vpc_id
+
+  ingress {
+    description = "HTTPS from VPC"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(var.common_tags, {
+    Name = "${var.name}-vpce-sg"
+  })
+}
+
 # ECS
 resource "aws_security_group" "ecs" {
   name = "${var.name}-ecs-sg"
@@ -79,4 +104,3 @@ resource "aws_vpc_security_group_ingress_rule" "ecs_from_alb" {
   to_port = 80
   ip_protocol = "tcp"
   referenced_security_group_id = aws_security_group.alb.id
-}
