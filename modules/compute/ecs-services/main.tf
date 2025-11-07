@@ -15,10 +15,14 @@ resource "aws_ecs_service" "this" {
       security_groups = [ var.sg_ecs_service_ids[each.key] ]
     }
 
-    load_balancer {
-      target_group_arn = var.target_group_arns[each.key]
-      container_name = each.key
-      container_port = each.value.port
+    # load_balancer {
+    #   target_group_arn = var.target_group_arns[each.key]
+    #   container_name = each.key
+    #   container_port = each.value.port
+    # }
+    
+    deployment_controller {
+      type = "CODE_DEPLOY"
     }
 
     lifecycle {
