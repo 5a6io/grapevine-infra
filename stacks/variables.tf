@@ -96,9 +96,26 @@ variable "health_check_path" {
   type = string
 }
 
+variable "alb_certificate_arn" {
+  type = string
+}
+
 variable "services" {
   type = map(object({
     port = number
-    paths = list(string) 
+    paths = list(string)
+    cpu = optional(number)
+    memory = optional(number)
+    image = optional(string)
+    desired_count = optional(number, 1)
   }))
+}
+
+#acm
+variable "private_key" {
+  type = string
+}
+
+variable "certificate_body" {
+  type = string
 }
