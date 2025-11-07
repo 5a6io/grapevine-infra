@@ -11,10 +11,10 @@ module "ecs_cluster" {
     enable_ec2 = true
 
     ecs_instance_sg_ids = module.sg.ecs.ids
-    instance_type = var.instance_type
-    max_size = var.max_size
-    min_size = var.min_size
-    desired_capacity = var.desired_capacity
+    # instance_type = var.instance_type 변경 시 주석 해제
+    max_size = 3
+    min_size = 2
+    desired_capacity = 1
 }
 
 module "ecs_task_definition" {
@@ -24,7 +24,13 @@ module "ecs_task_definition" {
     common_tags = var.common_tags
 
     region = var.region
-    service_definitions = var.service_definitions
+    service_definitions = {
+        for svc, def in var.service_definitions :
+        svc => merge(def, {
+            image = "${lookup(module.ecr.repository_urls, svc, module.ecr.repository_names["user"])}:latest" #레파지토리 이름 수정 필요
+            env_map = lookup(def, "env", var.environment)
+        })
+    }
     ecs_task_execution_role_arn = module.iam.ecs_task_execution_role_arn
     ecs_task_role_arns = module.iam.ecs_task_role_arns
 }

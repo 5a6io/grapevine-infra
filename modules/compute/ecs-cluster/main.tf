@@ -108,6 +108,7 @@ resource "aws_autoscaling_group" "this" {
   }
 }
 
+# EC2 실행 시 필요한 기본 이미지
 data "aws_ssm_parameter" "ami" {
   name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
 }

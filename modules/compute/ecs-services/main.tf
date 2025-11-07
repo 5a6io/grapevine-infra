@@ -21,6 +21,24 @@ resource "aws_ecs_service" "this" {
       container_port = each.value.port
     }
 
+    lifecycle {
+      # prevention external autoscaler/deployment tool conflict
+      ignore_changes = [desired_count]
+    }
+
+    # service connect
+    service_connect_configuration {
+      enabled = true
+      service {
+        port_name      = each.key
+        discovery_name = each.key
+        client_alias {
+          dns_name = each.key
+          port     = each.value.port
+        }
+      }
+    }
+
     tags = merge(var.common_tags, {
         Name = "${var.name}-ecs-service-${each.key + 1}"
     })

@@ -27,7 +27,8 @@ variable "service_definitions" {
 }
 
 variable "environment" {
-  type = map(string)
+  type = list(string)
+  default = [  ]
 }
 
 variable "ecs_task_execution_role_arn" {
