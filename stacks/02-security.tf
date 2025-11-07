@@ -13,3 +13,10 @@ module "waf" {
   common_tags = var.common_tags
   alb_arn = module.alb.alb_arn
 }
+
+#IAM
+module "iam" {
+  source = "../modules/security/iam"
+  name = var.name
+  common_tags = var.common_tags
+}
