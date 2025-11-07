@@ -10,6 +10,10 @@ variable "common_tags" {
   default = {}
 }
 
+variable "cluster_arn" {
+  type = string
+}
+
 variable "service_definitions" {
     type = map(object({
       port = number
@@ -21,10 +25,6 @@ variable "service_definitions" {
       cpu = string
       memory = string
     }))
-}
-
-variable "cluster_arn" {
-  type = string
 }
 
 variable "task_definition_arns" {
