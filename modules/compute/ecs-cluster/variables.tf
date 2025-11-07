@@ -17,10 +17,12 @@ variable "private_subnet_ids" {
 
 variable "namespace" {
     type = string
+    default = "svc.local"
 }
 
 variable "instance_type" {
   type = string
+  default = "m3.micro"
 }
 
 variable "max_size" {

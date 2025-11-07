@@ -43,25 +43,52 @@ variable "proxy_role_arn" { type = string }
 variable "rds_proxy_secret_arn" { type = string }
 variable "proxy_borrow_timeout" { type = number }
 
+#ecr
+variable "repositories" {
+  type = list(string)
+}
+
+variable "keep_tag_prefixes" {
+  type = list(string)
+  default = [ "latest" ]
+}
+
+variable "keep_any_last" {
+  type = number
+  default = 10
+}
+
+variable "mutability" {
+  type = string
+  default = "MUTABLE"
+}
+
 #ecs
 variable "service_definitions" {
-  type = map(object({
-    port = number
-    ingress_from = string
-    egress = list(object({
-      to = string
+    type = map(object({
       port = number
+      ingress_from = string
+      egress = list(object({
+        to = string
+        port = number
+      }))
+      cpu = string
+      memory = string
     }))
-    cpu = string
-    memory = string
-    image = string
-    env_map = map(string)
-  }))
+}
+
+variable "namespace" {
+  type = string
 }
 
 variable "instance_type" {
   type = string
   default = "t3.micro"
+}
+
+variable "environment" {
+  type = list(string)
+  default = [  ]
 }
 
 #alb

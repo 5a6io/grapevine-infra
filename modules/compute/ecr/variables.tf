@@ -21,7 +21,7 @@ variable "keep_any_last" {
   default = 10
 }
 
-variable "common_tags" {
-  type = map(string)
-  default = {}
+variable "mutability" {
+  type = string
+  default = "MUTABLE"
 }
