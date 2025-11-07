@@ -1,6 +1,6 @@
 resource "aws_lb" "this" {
   name = "${var.name}-alb"
-  internal = true
+  internal = false
   load_balancer_type = "application"
   security_groups = [ var.sg_alb_id ]
   subnets = var.subnet_ids
@@ -33,6 +33,7 @@ resource "aws_lb_listener" "http_listener" {
 }
 
 resource "aws_lb_listener" "https_listener" {
+  for_each = var.services
   load_balancer_arn = aws_lb.this.arn
   port  = 443
   protocol = "HTTPS"
@@ -41,7 +42,7 @@ resource "aws_lb_listener" "https_listener" {
   
   default_action {
     type = "forward"
-    target_group_arn = aws_lb_target_group.this.arn
+    target_group_arn = aws_lb_target_group.blue[each.key].arn
   }
 
   tags = merge(var.common_tags, {
@@ -62,7 +63,7 @@ resource "aws_lb_listener_rule" "this" {
 
     action {
         type = "forward"
-        target_group_arn = aws_lb_target_group.this[each.key].arn
+        target_group_arn = aws_lb_target_group.blue[each.key].arn
     }
 
     tags = merge(var.common_tags, {
@@ -70,9 +71,9 @@ resource "aws_lb_listener_rule" "this" {
     })
 }
 
-resource "aws_lb_target_group" "this" {
+resource "aws_lb_target_group" "blue" {
     for_each = var.services
-    name = "${var.name}-${each.key}-tg"
+    name = "${var.name}-${each.key}-blue-tg"
     port = each.value.port
     protocol = "HTTP"
     vpc_id = var.vpc_id
@@ -91,10 +92,36 @@ resource "aws_lb_target_group" "this" {
     }
 
     tags = merge(var.common_tags, {
-        Name = "${var.name}-${each.key}-tg"
+        Name = "${var.name}-${each.key}-blue-tg"
     })
 }
 
+
+resource "aws_lb_target_group" "green" {
+  for_each = var.services
+  name = "${var.name}-${each.key}-green-tg"
+  port = each.value.port
+  protocol = "HTTP"
+  vpc_id = var.vpc_id
+  target_type = var.target_type
+
+  health_check {
+        enabled = true
+        healthy_threshold = 2
+        interval = 30
+        matcher = "200"
+        path = var.health_check_path
+        port = "traffic-port"
+        protocol = "HTTP"
+        timeout = 5
+        unhealthy_threshold = 2
+    }
+
+    tags = merge(var.common_tags, {
+        Name = "${var.name}-${each.key}-green-tg"
+    })
+
+}
 
 locals {
   service_keys = sort(keys(var.services))
