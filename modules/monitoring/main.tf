@@ -9,7 +9,7 @@ resource "aws_cloudwatch_log_group" "ecs_log" {
 }
 
 resource "aws_cloudwatch_log_group" "waf_log" {
-  name = "/waf/${var.name}"
+  name = "/aws/waf/${var.name}"
   retention_in_days = 30
   tags = merge(var.common_tags, {
     Name = "${var.name}-waf-log-group"
