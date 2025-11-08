@@ -60,7 +60,9 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
 
 resource "aws_launch_template" "this" {
   count = var.enable_ec2 ? 1 : 0
-  name = "template"
+  for_each = var.services
+
+  name = "${var.name}-${each.key}-lt"
   image_id = data.aws_ssm_parameter.ami.value
 
   block_device_mappings {
@@ -81,20 +83,18 @@ resource "aws_launch_template" "this" {
     enabled = true
   }
 
-  vpc_security_group_ids = var.ecs_instance_sg_ids
+  vpc_security_group_ids = [ var.ecs_instance_sg_ids[each.key].id ]
 
-   user_data = base64encode(
-    <<EOF
-    #!/bin/bash
-    echo "ECS_CLUSTER=clustername" >> etc/ecs/ecs.config
-    EOF
-   )
+   user_data = base64encode(templatefile("${path.module}/ecs_user_data.sh", {
+    cluster_name = aws_ecs_cluster.name
+   }))
 }
 
 resource "aws_autoscaling_group" "this" {
   count = var.enable_ec2 ? 1 : 0
 
-  name = "${var.name}-asg"
+  for_each = var.services
+  name = "${var.name}-${each.key}-asg"
   desired_capacity = var.desired_capacity
   max_size = var.max_size
   min_size = var.min_size
