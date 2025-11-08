@@ -16,6 +16,7 @@ module "ecs_cluster" {
     max_size = var.max_size
     min_size = var.min_size
     desired_capacity = var.desired_capacity
+    services = var.services
 }
 
 module "ecs_task_definition" {
