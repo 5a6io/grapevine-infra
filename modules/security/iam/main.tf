@@ -2,7 +2,7 @@
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "${var.name}-ecs-task-execution-role"
   
-  assume_role_policy = jsondecode({
+  assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
         {
@@ -23,7 +23,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 resource "aws_iam_role" "ecs_task_role" {
   name = "${var.name}-ecs-task-role"
 
-  assume_role_policy = jsondecode({
+  assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
       Effect = "Allow"
@@ -41,13 +41,13 @@ resource "aws_iam_role" "ecs_task_role" {
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
   role = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = "arn:aws:iam:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 resource "aws_iam_role" "ecs_instance_role" {
   name = "${var.name}-ecs-instance-role"
 
-  assume_role_policy = jsondecode({
+  assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
       Effect = "Allow"
@@ -69,8 +69,8 @@ resource "aws_iam_role_policy_attachment" "ecs_task_permissions" {
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = "${var.name}-ecs-instance-profile"
-  role = aws_iam_role.ecs_instance_role
+  name = "${var.name}-instance-profile"
+  role = aws_iam_role.ecs_instance_role.name
 
   tags = merge(var.common_tags, {
     name = "${var.name}-instance-profile"
@@ -82,7 +82,7 @@ resource "aws_iam_instance_profile" "instance_profile" {
 resource "aws_iam_role" "codedeploy_role" {
   name = "${var.name}-codedeploy-role"
 
-  assume_role_policy = jsondecode({
+  assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {

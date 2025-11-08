@@ -38,7 +38,121 @@ variable "instance_class" { type = string }
 variable "rds_backup_day" { type = number }
 
 # rds proxy
+<<<<<<< Updated upstream
 variable "proxy_idle_client_timeout" { type = number }
 variable "proxy_role_arn" { type = string }
 variable "rds_proxy_secret_arn" { type = string }
 variable "proxy_borrow_timeout" { type = number }
+=======
+# variable "proxy_idle_client_timeout" { type = number }
+# variable "proxy_role_arn" { type = string }
+# variable "rds_proxy_secret_arn" { type = string }
+# variable "proxy_borrow_timeout" { type = number }
+
+#ecr
+variable "repositories" {
+  type = list(string)
+}
+
+variable "keep_tag_prefixes" {
+  type = list(string)
+  default = [ "latest" ]
+}
+
+variable "keep_any_last" {
+  type = number
+  default = 10
+}
+
+variable "mutability" {
+  type = string
+  default = "MUTABLE"
+}
+
+#ecs
+variable "service_definitions" {
+  type = map(object({
+    port = number
+    ingress_from = string
+    egress = list(object({
+      to = string
+      port = number
+    }))
+    cpu = string
+    memory = string
+    image = string
+    env_map = optional(map(string))
+  }))
+}
+variable "namespace" {
+  type = string
+}
+
+variable "instance_type" {
+  type = string
+  default = "t3.micro"
+}
+
+variable "environment" {
+  type = list(string)
+  default = [  ]
+}
+
+variable "max_size" {
+  type = number
+}
+
+variable "min_size" {
+  type = number
+}
+
+variable "desired_capacity" {
+  type = number
+}
+
+variable "enable_ec2" {
+  type = bool
+  default = false
+}
+
+variable "enable_fargate" {
+  type = bool
+  default = true
+}
+
+#alb
+variable "health_check_path" {
+  type = string
+}
+
+# variable "alb_certificate_arn" {
+#   type = string
+# }
+
+variable "services" {
+  type = map(object({
+    port = number
+    paths = list(string)
+    cpu = optional(number)
+    memory = optional(number)
+    image = optional(string)
+    desired_count = optional(number, 1)
+  }))
+}
+
+#acm
+# variable "private_key" {
+#   type = string
+# }
+
+# variable "certificate_body" {
+#   type = string
+# }
+
+#monitoring
+variable "log_groups" {
+  type = map(object({
+    retention = number
+  }))
+}
+>>>>>>> Stashed changes

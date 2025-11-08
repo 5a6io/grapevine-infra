@@ -80,6 +80,14 @@ resource "aws_security_group" "ecs" {
   })
 }
 
+resource "aws_security_group" "ec2_instance" {
+  name = "${var.name}-ec2-sg"
+  vpc_id = var.vpc_id
+  tags = merge(var.common_tags, {
+    Name = "${var.name}-ec2-sg"
+  })
+}
+
 resource "aws_security_group" "ecs_service" {
   name = "${var.name}-ecs-service-sg"
   vpc_id = var.vpc_id
