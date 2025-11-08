@@ -65,18 +65,19 @@ variable "mutability" {
 
 #ecs
 variable "service_definitions" {
-    type = map(object({
+  type = map(object({
+    port = number
+    ingress_from = string
+    egress = list(object({
+      to = string
       port = number
-      ingress_from = string
-      egress = list(object({
-        to = string
-        port = number
-      }))
-      cpu = string
-      memory = string
     }))
+    cpu = string
+    memory = string
+    image = string
+    env_map = optional(map(string))
+  }))
 }
-
 variable "namespace" {
   type = string
 }
@@ -99,8 +100,18 @@ variable "min_size" {
   type = number
 }
 
-variable "desired_count" {
+variable "desired_capacity" {
   type = number
+}
+
+variable "enable_ec2" {
+  type = bool
+  default = false
+}
+
+variable "enable_fargate" {
+  type = bool
+  default = true
 }
 
 #alb
@@ -108,9 +119,9 @@ variable "health_check_path" {
   type = string
 }
 
-variable "alb_certificate_arn" {
-  type = string
-}
+# variable "alb_certificate_arn" {
+#   type = string
+# }
 
 variable "services" {
   type = map(object({
@@ -124,10 +135,16 @@ variable "services" {
 }
 
 #acm
-variable "private_key" {
-  type = string
-}
+# variable "private_key" {
+#   type = string
+# }
 
-variable "certificate_body" {
-  type = string
+# variable "certificate_body" {
+#   type = string
+# }
+
+variable "log_groups" {
+  type = map(object({
+    retention = number
+  }))
 }

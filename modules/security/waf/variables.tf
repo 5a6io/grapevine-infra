@@ -11,3 +11,7 @@ variable "common_tags" {
 variable "alb_arn" {
   type = string
 }
+
+variable "waf_log_group_arn" {
+  type = string
+}

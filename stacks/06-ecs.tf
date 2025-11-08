@@ -7,14 +7,14 @@ module "ecs_cluster" {
     private_subnet_ids = module.subnets.private_subnet_ids
 
     namespace = var.namespace
-    enable_fargate = true
-    enable_ec2 = true
+    enable_fargate = var.enable_fargate
+    enable_ec2 = var.enable_ec2
 
     ecs_instance_sg_ids = module.sg.ecs.ids
     instance_type = var.instance_type
-    max_size = 3
-    min_size = 2
-    desired_capacity = 1
+    max_size = var.max_size
+    min_size = var.min_size
+    desired_capacity = var.desired_capacity
 }
 
 module "ecs_task_definition" {
@@ -44,7 +44,7 @@ module "ecs_service" {
     service_definitions = var.service_definitions
     cluster_arn = module.ecs_cluster.cluster_arn
     task_definition_arns = module.ecs_task_definition.task_definition_arns
-
+    
     private_subnet_ids = module.subnets.private_subnet_ids
     sg_ecs_service_ids = module.sg.ecs_service.ids
 }
