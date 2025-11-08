@@ -14,14 +14,16 @@ module "alb" {
 
   vpc_id = module.vpc.vpc_id
   target_type = "ip"
-  subnet_ids = module.subnet.public_subnet_ids
-  sg_alb_id = module.sg.alb
+  subnet_ids = module.subnets.public_subnet_ids
+  sg_alb_id = module.sg.sg_alb_id
   health_check_path = var.health_check_path
   services = module.ecs_service.service_arns
-  alb_certificate_arn = data.rsa
+  alb_certificate_arn = data.aws_acm_certificate.rsa.arn
 }
 
-data "acm_arn" "rsa" {
-  types = ["AMAZON_ISSUED"]
+data "aws_acm_certificate" "rsa_4096" {
+  domain = ""
+  tags = var.common_tags
+  types = ["ISSUED"]
   most_recent = true
 }

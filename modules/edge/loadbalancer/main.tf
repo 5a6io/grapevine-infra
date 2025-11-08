@@ -18,12 +18,12 @@ resource "aws_lb_listener" "http_listener" {
   protocol = "HTTP"
 
   default_action {
-    type = redirect
+    type = "redirect"
 
     redirect {
       port = 443
       protocol = "HTTPS"
-      status_code = "301"
+      status_code = "HTTP_301"
     }
   }
 
@@ -38,7 +38,7 @@ resource "aws_lb_listener" "https_listener" {
   port  = 443
   protocol = "HTTPS"
   ssl_policy = "ELBsecurity-2016-08"
-  certificate_arn = aws_acm_certificate.this.arn
+  certificate_arn = var.alb_certificate_arn
   
   default_action {
     type = "forward"
@@ -52,7 +52,7 @@ resource "aws_lb_listener" "https_listener" {
 
 resource "aws_lb_listener_rule" "this" {
     for_each = var.alb_certificate_arn != null ? var.services : {}
-    listener_arn = aws_lb_listener.https_listener.arn
+    listener_arn = aws_lb_listener.https_listener[each.key].arn
     priority = index(local.service_keys, each.key) + 1
   
     condition {
