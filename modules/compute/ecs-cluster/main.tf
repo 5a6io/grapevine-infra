@@ -73,7 +73,7 @@ resource "aws_launch_template" "this" {
   
   update_default_version = true
   iam_instance_profile {
-    arn = aws_iam_instance_profile.instance_profile.arn
+    arn = var.instance_profile_arn
   }
   
   instance_type = var.instance_type
@@ -103,7 +103,7 @@ resource "aws_autoscaling_group" "this" {
   vpc_zone_identifier = var.private_subnet_ids
 
   launch_template {
-    id = aws_launch_template.this.id
+    id = aws_launch_template.this[count.index].id
     version = "$Latest"
   }
 }
