@@ -12,7 +12,7 @@ resource "aws_ecr_lifecycle_policy" "this" {
   for_each = toset(var.repositories)
   repository = aws_ecr_repository.this[each.key].name
 
-  policy = jsondecode({
+  policy = jsonencode({
     rules = concat(
         [
             for i, p in var.keep_tag_prefixes : {

@@ -22,7 +22,7 @@ variable "service_definitions" {
     cpu = string
     memory = string
     image = string
-    env_map = map(string)
+    env_map = optional(map(string))
   }))
 }
 
@@ -36,5 +36,9 @@ variable "ecs_task_execution_role_arn" {
 }
 
 variable "ecs_task_role_arns" {
+  type = map(string)
+}
+
+variable "ecs_log_group_arns" {
   type = map(string)
 }

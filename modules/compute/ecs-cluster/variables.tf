@@ -50,3 +50,7 @@ variable "enable_fargate" {
 variable "ecs_instance_sg_ids" {
   type = list(string)
 }
+
+variable "instance_profile_arn" {
+  type = string
+}

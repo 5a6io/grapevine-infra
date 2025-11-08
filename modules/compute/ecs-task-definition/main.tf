@@ -14,7 +14,7 @@ resource "aws_ecs_task_definition" "svc_task" {
       operating_system_family = "LINUX"
     }
 
-    container_definitions = jsondecode([
+    container_definitions = jsonencode([
         {
             name = each.key
             image = each.value.image
@@ -33,7 +33,7 @@ resource "aws_ecs_task_definition" "svc_task" {
             log_configuration = {
                 logDriver = "awslogs",
                 options = {
-                    awslogs-group = aws_cloudwatch_log_group.svc[each.key].name
+                    awslogs-group = var.ecs_log_group_arns[each.key]
                     awslogs-region = var.region
                     awslogs-stream-prefix = each.key
                 }

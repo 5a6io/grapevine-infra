@@ -28,8 +28,62 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
     capacity_providers = [ aws_ecs_capacity_provider.this.name ]
 
     default_capacity_provider_strategy {
-        capacity_provider = aws_ecs_capacity_provider.this.name
-        weight = 1
-        base = 0
+      capacity_provider = var.enable_fargate ? "FARGATE" : aws_ecs_capacity_provider.ec2[0].name
+      weight = 1
     }
+}
+
+resource "aws_launch_template" "this" {
+  count = var.enable_ec2 ? 1 : 0
+  name = "template"
+  image_id = data.aws_ssm_parameter.ami.value
+
+  block_device_mappings {
+    device_name = "/dev/sda1"
+    ebs {
+      volume_size = 50
+      delete_on_termination = true
+    }
+  }
+  
+  update_default_version = true
+  iam_instance_profile {
+    arn = var.instance_profile_arn
+  }
+  
+  instance_type = var.instance_type
+  monitoring {
+    enabled = true
+  }
+
+  vpc_security_group_ids = var.ecs_instance_sg_ids
+
+   user_data = base64encode(
+    <<EOF
+    #!/bin/bash
+    echo "ECS_CLUSTER=clustername" >> etc/ecs/ecs.config
+    EOF
+   )
+}
+
+resource "aws_autoscaling_group" "this" {
+  count = var.enable_ec2 ? 1 : 0
+
+  name = "${var.name}-asg"
+  desired_capacity = var.desired_capacity
+  max_size = var.max_size
+  min_size = var.min_size
+  protect_from_scale_in = true
+  # list of subnet ids to launch the instances in private subnets
+  vpc_zone_identifier = var.private_subnet_ids
+
+  launch_template {
+    id = aws_launch_template.this[count.index].id
+    version = "$Latest"
+  }
+}
+
+# EC2 실행 시 필요한 기본 이미지
+data "aws_ssm_parameter" "ami" {
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
 }
