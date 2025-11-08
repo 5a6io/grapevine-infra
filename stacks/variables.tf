@@ -91,6 +91,18 @@ variable "environment" {
   default = [  ]
 }
 
+variable "max_size" {
+  type = number
+}
+
+variable "min_size" {
+  type = number
+}
+
+variable "desired_count" {
+  type = number
+}
+
 #alb
 variable "health_check_path" {
   type = string
