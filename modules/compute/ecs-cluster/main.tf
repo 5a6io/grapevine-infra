@@ -78,7 +78,7 @@ resource "aws_launch_template" "this" {
     enabled = true
   }
 
-  vpc_security_group_ids = [ var.ecs_instance_sg_ids[each.key].id ]
+  vpc_security_group_ids = [ var.ecs_instance_sg_ids[each.key] ]
 
   #  user_data = base64encode(templatefile("${path.module}/ecs_user_data.sh", {
   #   cluster_name = aws_ecs_cluster.this.name
@@ -86,7 +86,7 @@ resource "aws_launch_template" "this" {
 }
 
 resource "aws_autoscaling_group" "this" {
-  for_each = enable_ec2 ? var.services : {}
+  for_each = var.enable_ec2 ? var.services : {}
 
   name = "${var.name}-${each.key}-asg"
   desired_capacity = var.desired_capacity
