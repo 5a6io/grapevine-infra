@@ -23,8 +23,12 @@ variable "service_definitions" {
     memory = string
     image = string
     env_map = map(string)
-    secret_keys = list(string)
   }))
+}
+
+variable "environment" {
+  type = list(string)
+  default = [  ]
 }
 
 variable "ecs_task_execution_role_arn" {

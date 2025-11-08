@@ -44,7 +44,7 @@ module "ecs_service" {
     service_definitions = var.service_definitions
     cluster_arn = module.ecs_cluster.cluster_arn
     task_definition_arns = module.ecs_task_definition.task_definition_arns
-
+    
     private_subnet_ids = module.subnets.private_subnet_ids
     sg_ecs_service_ids = module.sg.ecs_service.ids
 }
