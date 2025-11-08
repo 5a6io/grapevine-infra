@@ -1,11 +1,13 @@
-resource "aws_ecs_service" "svc" {
+resource "aws_ecs_service" "this" {
     for_each = var.service_definitions
+
     name = "${var.name}-${each.key}"
     cluster = var.cluster_arn
     task_definition = var.task_definition_arns[each.key]
-    # desired_count = each.value.desired_count
-    launch_type = "FARGATE"
-    # platform_version = ""
+    
+    desired_count = each.value.desired_count
+    launch_type = each.value.launch_type
+
     health_check_grace_period_seconds = lookup(each.value, "health_check_grace_period_seconds", 30)
 
     network_configuration {
@@ -17,6 +19,24 @@ resource "aws_ecs_service" "svc" {
       target_group_arn = var.target_group_arns[each.key]
       container_name = each.key
       container_port = each.value.port
+    }
+
+    lifecycle {
+      # prevention external autoscaler/deployment tool conflict
+      ignore_changes = [desired_count]
+    }
+
+    # service connect
+    service_connect_configuration {
+      enabled = true
+      service {
+        port_name      = each.key
+        discovery_name = each.key
+        client_alias {
+          dns_name = each.key
+          port     = each.value.port
+        }
+      }
     }
 
     tags = merge(var.common_tags, {

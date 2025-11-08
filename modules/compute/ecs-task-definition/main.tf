@@ -1,17 +1,14 @@
-data "aws_secretsmanager_secret" "this" {
-  for_each = va
-}
-
 resource "aws_ecs_task_definition" "svc_task" {
     for_each = var.service_definitions
+
     family = "${var.name}-${each.key}"
-    network_mode = "awsvpc"
-    requires_compatibilities = ["FARGATE"]
+    requires_compatibilities = each.value.launch_type
     cpu = each.value.cpu
     memory = each.value.memory
+    network_mode = each.value.launch_type == "FARGATE" ? "awsvpc" : "bridge"
 
     execution_role_arn = var.ecs_task_execution_role_arn
-    task_role_arn = var.ecs_task_role_arns[each.key]
+    task_role_arn = try(var.ecs_task_role_arns[each.key], null)
 
     runtime_platform {
       operating_system_family = "LINUX"
@@ -22,6 +19,7 @@ resource "aws_ecs_task_definition" "svc_task" {
             name = each.key
             image = each.value.image
             essential = true
+
             portMappings = [
                 {
                     containerPort = each.value.port
@@ -30,6 +28,8 @@ resource "aws_ecs_task_definition" "svc_task" {
                     name = each.key
                 }
             ]
+
+            # Cloud Watch Logs
             log_configuration = {
                 logDriver = "awslogs",
                 options = {
@@ -39,22 +39,11 @@ resource "aws_ecs_task_definition" "svc_task" {
                 }
             }
 
-            environment = concat(
-                [
-                    
-                ]
-            )
-
-            secrets = [
-                for key_name in lookup(each.value, "secret_keys", []) : {
-                    name = key_name
-                    valueFron = data.aws_secretmanager_secret.this[key_name].arn
-                }
-            ]
+            environment = var.environment
         }
     ])
 
     tags = merge(var.common_tags, {
-        Name = "${var.name}"
+        Name = "${var.name}-ecs-task-definition"
     })
 }

@@ -42,3 +42,80 @@ variable "proxy_idle_client_timeout" { type = number }
 variable "proxy_role_arn" { type = string }
 variable "rds_proxy_secret_arn" { type = string }
 variable "proxy_borrow_timeout" { type = number }
+
+#ecr
+variable "repositories" {
+  type = list(string)
+}
+
+variable "keep_tag_prefixes" {
+  type = list(string)
+  default = [ "latest" ]
+}
+
+variable "keep_any_last" {
+  type = number
+  default = 10
+}
+
+variable "mutability" {
+  type = string
+  default = "MUTABLE"
+}
+
+#ecs
+variable "service_definitions" {
+    type = map(object({
+      port = number
+      ingress_from = string
+      egress = list(object({
+        to = string
+        port = number
+      }))
+      cpu = string
+      memory = string
+    }))
+}
+
+variable "namespace" {
+  type = string
+}
+
+variable "instance_type" {
+  type = string
+  default = "t3.micro"
+}
+
+variable "environment" {
+  type = list(string)
+  default = [  ]
+}
+
+#alb
+variable "health_check_path" {
+  type = string
+}
+
+variable "alb_certificate_arn" {
+  type = string
+}
+
+variable "services" {
+  type = map(object({
+    port = number
+    paths = list(string)
+    cpu = optional(number)
+    memory = optional(number)
+    image = optional(string)
+    desired_count = optional(number, 1)
+  }))
+}
+
+#acm
+variable "private_key" {
+  type = string
+}
+
+variable "certificate_body" {
+  type = string
+}
