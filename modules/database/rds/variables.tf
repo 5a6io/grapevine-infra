@@ -30,7 +30,7 @@ variable "proxy_idle_client_timeout" {
   type = number 
   default = 1800
 }
-variable "proxy_role_arn" { type = string }
+variable "rds_proxy_role" { type = string }
 variable "rds_proxy_secret_arn" { type = string }
 variable "proxy_borrow_timeout" { 
   type = number 
