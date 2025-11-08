@@ -25,6 +25,7 @@ variable "service_definitions" {
     image = string
     env_map = map(string)
     log_retention = number
+    desired_count = optional(number, 1)
   }))
 }
 
