@@ -41,7 +41,7 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   ecs_service {
     cluster_name = var.ecs_cluster_name
-    service_name = var.ecs_service[each.key]
+    service_name = each.key
   }
 
   load_balancer_info {

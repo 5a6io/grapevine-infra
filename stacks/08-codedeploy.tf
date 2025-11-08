@@ -9,6 +9,5 @@ module "codedeploy" {
   
   ecs_cluster_name = module.ecs_cluster.ecs_cluster_name
   services = module.ecs_service.service_names
-  ecs_service = module.ecs_service.service_names
   codedeploy_role_arn = module.iam.codedeploy_role
 }
