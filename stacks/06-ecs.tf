@@ -11,7 +11,7 @@ module "ecs_cluster" {
     enable_ec2 = true
 
     ecs_instance_sg_ids = module.sg.ecs.ids
-    # instance_type = var.instance_type 변경 시 주석 해제
+    instance_type = var.instance_type
     max_size = 3
     min_size = 2
     desired_capacity = 1
@@ -47,6 +47,4 @@ module "ecs_service" {
 
     private_subnet_ids = module.subnets.private_subnet_ids
     sg_ecs_service_ids = module.sg.ecs_service.ids
-
-    target_group_arns = module.alb.target_groups_arns
 }

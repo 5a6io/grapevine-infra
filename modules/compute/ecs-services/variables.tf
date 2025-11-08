@@ -38,7 +38,3 @@ variable "private_subnet_ids" {
 variable "sg_ecs_service_ids" {
   type = map(string)
 }
-
-variable "target_group_arns" {
-  type = map(string)
-}
