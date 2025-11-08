@@ -18,5 +18,10 @@ module "alb" {
   sg_alb_id = module.sg.alb
   health_check_path = var.health_check_path
   services = module.ecs_service.service_arns
-  alb_certificate_arn = module.acm.arn
+  alb_certificate_arn = data.rsa
+}
+
+data "acm_arn" "rsa" {
+  types = ["AMAZON_ISSUED"]
+  most_recent = true
 }
