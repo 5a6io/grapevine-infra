@@ -23,3 +23,12 @@ module "iam" {
   common_tags = var.common_tags
   services = var.services
 }
+
+# secretsmanager
+module "secretsmanager" {
+  source = "../modules/security/secretsmanager"
+  name = var.name
+  common_tags = var.common_tags
+  db_username = var.db_username
+  db_password = var.db_password
+}

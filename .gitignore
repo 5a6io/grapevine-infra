@@ -19,3 +19,6 @@ crash.log
 .DS_Store
 .idea/
 .vscode/
+
+# SSL
+alb.*

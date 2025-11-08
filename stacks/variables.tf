@@ -39,8 +39,6 @@ variable "rds_backup_day" { type = number }
 
 # rds proxy
 variable "proxy_idle_client_timeout" { type = number }
-variable "proxy_role_arn" { type = string }
-variable "rds_proxy_secret_arn" { type = string }
 variable "proxy_borrow_timeout" { type = number }
 
 #ecr
@@ -143,7 +141,6 @@ variable "services" {
 #   type = string
 # }
 
-#monitoring
 variable "log_groups" {
   type = map(object({
     retention = number
