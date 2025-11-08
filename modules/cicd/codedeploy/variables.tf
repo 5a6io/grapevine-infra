@@ -7,11 +7,15 @@ variable "common_tags" {
   default = {}
 }
 
-variable "vpc_id" {
+variable "target_group_blue" {
   type = string
 }
 
-variable "target_type" {
+variable "target_group_green" {
+  type = string
+}
+
+variable "lb_listener_arn" {
   type = string
 }
 
@@ -26,19 +30,6 @@ variable "services" {
   }))
 }
 
-variable "health_check_path" {
-  type = string
-  default = "/health"
-}
-
-variable "subnet_ids" {
-  type = list(string)
-}
-
-variable "sg_alb_id" {
-  type = string
-}
-
-variable "alb_certificate_arn" {
+variable "ecs_cluster_name" {
   type = string
 }
