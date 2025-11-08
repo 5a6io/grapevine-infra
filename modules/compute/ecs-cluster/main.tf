@@ -59,9 +59,8 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
 }
 
 resource "aws_launch_template" "this" {
-  count = var.enable_ec2 ? 1 : 0
-  for_each = var.services
-
+  for_each = var.enable_ec2 ? var.services : 0
+  
   name = "${var.name}-${each.key}-lt"
   image_id = data.aws_ssm_parameter.ami.value
 
@@ -91,9 +90,8 @@ resource "aws_launch_template" "this" {
 }
 
 resource "aws_autoscaling_group" "this" {
-  count = var.enable_ec2 ? 1 : 0
+  for_each = enable_ec2 ? var.services : 0
 
-  for_each = var.services
   name = "${var.name}-${each.key}-asg"
   desired_capacity = var.desired_capacity
   max_size = var.max_size
@@ -103,7 +101,7 @@ resource "aws_autoscaling_group" "this" {
   vpc_zone_identifier = var.private_subnet_ids
 
   launch_template {
-    id = aws_launch_template.this[count.index].id
+    id = aws_launch_template.this[each.key].id
     version = "$Latest"
   }
 }
