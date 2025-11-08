@@ -70,12 +70,15 @@ variable "service_definitions" {
       to = string
       port = number
     }))
+    launch_type  = optional(string, "FARGATE")
     cpu = string
     memory = string
     image = string
-    env_map = optional(map(string))
+    env_map = map(string)
+    log_retention = number
   }))
 }
+
 variable "namespace" {
   type = string
 }
@@ -86,10 +89,14 @@ variable "instance_type" {
 }
 
 variable "environment" {
-  type = list(string)
-  default = [  ]
+  description = "Default environment variables for ECS containers"
+  type        = map(string)
+  default = {
+    SPRING_PROFILES_ACTIVE = "dev"
+    AWS_REGION             = "ap-northeast-2"
+    TZ                     = "Asia/Seoul"
+  }
 }
-
 variable "max_size" {
   type = number
 }
