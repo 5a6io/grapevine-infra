@@ -6,6 +6,13 @@ variable "common_tags" {
 
 variable "vpc_id" { type = string }
 
-# variable "instances" {
-#   type = map(string)
-# }
+variable "services" {
+  type = map(object({
+    port = number
+    paths = list(string)
+    cpu = optional(number)
+    memory = optional(number)
+    image = optional(string)
+    desired_count = optional(number, 1)
+  }))
+}
