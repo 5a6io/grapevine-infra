@@ -33,20 +33,20 @@ module "ecs_task_definition" {
         })
     }
     ecs_task_execution_role_arn = module.iam.ecs_task_execution_role
-    ecs_task_role_arn = module.iam.ecs_task_role
-    ecs_log_group_arns = module.cloudwatch.cloudwatch_ecs_log_group_arns
+    ecs_task_role_arns = module.iam.ecs_task_role
+    ecs_log_group_names = module.cloudwatch.cloudwatch_ecs_log_group_names
 }
 
 module "ecs_service" {
     source = "../modules/compute/ecs-services"
     name = var.name
     common_tags = var.common_tags
-
     region = var.region
+
     service_definitions = var.service_definitions
     cluster_arn = module.ecs_cluster.ecs_cluster_arn
     task_definition_arns = module.ecs_task_definition.task_definition_arns
     
     private_subnet_ids = module.subnets.private_subnet_ids
-    sg_ecs_service_id = module.sg.sg_ecs_service_id
+    sg_ecs_service_ids = module.sg.sg_ecs_service_ids
 }
