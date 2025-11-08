@@ -9,10 +9,6 @@ resource "aws_service_discovery_private_dns_namespace" "svc" {
 resource "aws_ecs_cluster" "this" {
     name = "${var.name}-ecs-cluster"
 
-    depends_on = [ 
-        aws_ecs_capacity_provider.ec2
-     ]
-
     setting {
       name = "containerInsights"
       value = "enabled"
@@ -59,7 +55,7 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
 }
 
 resource "aws_launch_template" "this" {
-  for_each = var.enable_ec2 ? var.services : 0
+  for_each = var.enable_ec2 ? var.services : {}
   
   name = "${var.name}-${each.key}-lt"
   image_id = data.aws_ssm_parameter.ami.value
@@ -84,13 +80,13 @@ resource "aws_launch_template" "this" {
 
   vpc_security_group_ids = [ var.ecs_instance_sg_ids[each.key].id ]
 
-   user_data = base64encode(templatefile("${path.module}/ecs_user_data.sh", {
-    cluster_name = aws_ecs_cluster.name
-   }))
+  #  user_data = base64encode(templatefile("${path.module}/ecs_user_data.sh", {
+  #   cluster_name = aws_ecs_cluster.this.name
+  #  }))
 }
 
 resource "aws_autoscaling_group" "this" {
-  for_each = enable_ec2 ? var.services : 0
+  for_each = enable_ec2 ? var.services : {}
 
   name = "${var.name}-${each.key}-asg"
   desired_capacity = var.desired_capacity
