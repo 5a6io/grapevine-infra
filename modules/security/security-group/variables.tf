@@ -5,3 +5,7 @@ variable "common_tags" {
 }
 
 variable "vpc_id" { type = string }
+
+# variable "instances" {
+#   type = map(string)
+# }
