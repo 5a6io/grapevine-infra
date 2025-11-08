@@ -1,8 +1,18 @@
+resource "aws_cloudwatch_log_group" "ecs_log" {
+  for_each = var.service_definitions
+  name     = "/ecs/${var.name}/${each.key}"
+  retention_in_days = each.value.log_retention
+
+  tags = merge(var.common_tags, {
+    Name = "${var.name}-${each.key}-ecs-logs"
+  })
+}
+
 resource "aws_ecs_task_definition" "svc_task" {
     for_each = var.service_definitions
 
     family = "${var.name}-${each.key}"
-    requires_compatibilities = each.value.launch_type
+    requires_compatibilities = [each.value.launch_type]
     cpu = each.value.cpu
     memory = each.value.memory
     network_mode = each.value.launch_type == "FARGATE" ? "awsvpc" : "bridge"
@@ -33,13 +43,18 @@ resource "aws_ecs_task_definition" "svc_task" {
             log_configuration = {
                 logDriver = "awslogs",
                 options = {
-                    awslogs-group = var.ecs_log_group_names[each.key]
+                    awslogs-group = aws_cloudwatch_log_group.ecs_log[each.key].name
                     awslogs-region = var.region
                     awslogs-stream-prefix = each.key
                 }
             }
 
-            environment = var.environment
+            environment = [
+            for k, v in var.environment : {
+                name  = k
+                value = v
+            }
+            ]
         }
     ])
 
