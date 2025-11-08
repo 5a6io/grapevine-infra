@@ -1,4 +1,4 @@
-resource "aws_cloudwatch_log_group" "this" {
+resource "aws_cloudwatch_log_group" "ecs_log" {
   for_each = var.log_groups
   name = "/ecs/${each.key}"
   retention_in_days = each.value.retention
@@ -8,10 +8,18 @@ resource "aws_cloudwatch_log_group" "this" {
   })
 }
 
+resource "aws_cloudwatch_log_group" "waf_log" {
+  name = "/waf/${var.name}"
+  retention_in_days = 30
+  tags = merge(var.common_tags, {
+    Name = "${var.name}-waf-log-group"
+  })
+}
+
 resource "aws_cloudwatch_dashboard" "this" {
   dashboard_name = "${var.name}-dashboard"
 
-  dashboard_body = jsondecode({
+  dashboard_body = jsonencode({
     widgets = [
         {
             "type" = "metric",
