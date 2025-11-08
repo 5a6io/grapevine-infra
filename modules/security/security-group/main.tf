@@ -81,16 +81,48 @@ resource "aws_security_group" "ecs" {
 }
 
 resource "aws_security_group" "ec2_instance" {
-  name = "${var.name}-ec2-sg"
+  for_each = var.services
+
+  name = "${var.name}-${each.key}-sg"
   vpc_id = var.vpc_id
+
+  ingress {
+    from_port = each.value.port
+    to_port = each.value.port
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   tags = merge(var.common_tags, {
     Name = "${var.name}-ec2-sg"
   })
 }
 
 resource "aws_security_group" "ecs_service" {
-  name = "${var.name}-ecs-service-sg"
+  for_each = var.services
+
+  name = "${var.name}-${each.key}-sg"
   vpc_id = var.vpc_id
+
+  ingress {
+    from_port = each.value.port
+    to_port = each.value.port
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   tags = merge(var.common_tags, {
     Name = "${var.name}-ecs-service-sg"
   })
