@@ -89,7 +89,7 @@ resource "aws_db_proxy" "this" {
   engine_family          = "MYSQL"
   idle_client_timeout    = var.proxy_idle_client_timeout
   require_tls            = true
-  role_arn               = var.proxy_role_arn
+  role_arn               = var.rds_proxy_role
   vpc_security_group_ids = [var.sg_rds_proxy_id]
   vpc_subnet_ids         = var.private_subnet_ids
 
