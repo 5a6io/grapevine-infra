@@ -154,3 +154,7 @@ variable "log_groups" {
     retention = number
   }))
 }
+
+variable "alb_ca_arn" {
+  type = string
+}
