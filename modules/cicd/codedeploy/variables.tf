@@ -37,7 +37,3 @@ variable "ecs_cluster_name" {
 variable "codedeploy_role_arn" {
   type = string
 }
-
-variable "ecs_service" {
-  type = map(string)
-}
