@@ -20,4 +20,5 @@ module "iam" {
   source = "../modules/security/iam"
   name = var.name
   common_tags = var.common_tags
+  services = var.services
 }
