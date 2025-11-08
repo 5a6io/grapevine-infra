@@ -44,6 +44,6 @@ resource "aws_ecs_service" "this" {
     }
 
     tags = merge(var.common_tags, {
-        Name = "${var.name}-ecs-service-${each.key + 1}"
+        Name = "${var.name}-ecs-service-${each.key}"
     })
 }
