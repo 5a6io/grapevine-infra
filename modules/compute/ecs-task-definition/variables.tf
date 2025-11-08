@@ -39,6 +39,6 @@ variable "ecs_task_role_arns" {
   type = map(string)
 }
 
-variable "ecs_log_group_arns" {
+variable "ecs_log_group_names" {
   type = map(string)
 }

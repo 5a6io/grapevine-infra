@@ -33,7 +33,7 @@ resource "aws_ecs_task_definition" "svc_task" {
             log_configuration = {
                 logDriver = "awslogs",
                 options = {
-                    awslogs-group = var.ecs_log_group_arns[each.key]
+                    awslogs-group = var.ecs_log_group_names[each.key]
                     awslogs-region = var.region
                     awslogs-stream-prefix = each.key
                 }
