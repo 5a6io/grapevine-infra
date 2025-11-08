@@ -7,10 +7,11 @@ variable "common_tags" {
   default = {}
 }
 
-variable "private_key" {
+
+variable "alb_arn" {
   type = string
 }
 
-variable "certificate_body" {
+variable "waf_log_group_arn" {
   type = string
 }

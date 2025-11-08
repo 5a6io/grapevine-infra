@@ -65,18 +65,19 @@ variable "mutability" {
 
 #ecs
 variable "service_definitions" {
-    type = map(object({
+  type = map(object({
+    port = number
+    ingress_from = string
+    egress = list(object({
+      to = string
       port = number
-      ingress_from = string
-      egress = list(object({
-        to = string
-        port = number
-      }))
-      cpu = string
-      memory = string
     }))
+    cpu = string
+    memory = string
+    image = string
+    env_map = optional(map(string))
+  }))
 }
-
 variable "namespace" {
   type = string
 }
@@ -118,9 +119,9 @@ variable "health_check_path" {
   type = string
 }
 
-variable "alb_certificate_arn" {
-  type = string
-}
+# variable "alb_certificate_arn" {
+#   type = string
+# }
 
 variable "services" {
   type = map(object({
@@ -141,3 +142,9 @@ variable "services" {
 # variable "certificate_body" {
 #   type = string
 # }
+
+variable "log_groups" {
+  type = map(object({
+    retention = number
+  }))
+}

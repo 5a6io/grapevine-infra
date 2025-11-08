@@ -15,3 +15,13 @@ provider "aws" {
     tags = var.common_tags
   }
 }
+
+terraform {
+  backend "remote" {
+    organization = "Softbank-hackathon-Grape"
+
+    workspaces {
+      name = "grapevine-infra-terraform-cloud"
+    }
+  }
+}

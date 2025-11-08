@@ -1,43 +1,29 @@
+# module "acm" {
+#   source = "../modules/edge/acm"
+#   name = var.name
+#   common_tags = var.common_tags
+
+#   private_key = var.private_key
+#   certificate_body = var.certificate_body
+# }
+
 module "alb" {
-  source = "terraform-aws-modules"
-
+  source = "../modules/edge/loadbalancer"
   name = var.name
-  vpc_id = var.vpc_id
-  subnets = []
+  common_tags = var.common_tags
 
-  security_group_ingress_rules = {
-    all_http = {
-        from_port = 80
-        to_port = 80
-        ip_protocol = "tcp"
-        cidr_ipv4 = "0.0.0.0/0"
-    }
-    all_https = {
-        from_port = 443
-        to_port = 443
-        ip_protocol = "tcp"
-        cidr_ipv4 = "0.0.0.0/0"
-    }
-  }
+  vpc_id = module.vpc.vpc_id
+  target_type = "ip"
+  subnet_ids = module.subnets.public_subnet_ids
+  sg_alb_id = module.sg.sg_alb_id
+  health_check_path = var.health_check_path
+  services = module.ecs_service.service_arns
+  alb_certificate_arn = data.aws_acm_certificate.rsa.arn
+}
 
-  access_logs = {
-    bucket = ""
-  }
-
-  listeners = {
-    ex-http-https-redirec = {
-
-    }
-    ex-https = {
-
-    }
-  }
-
-  target_groups = {
-    ex-instance = {
-
-    }
-  }
-
-  tags = {}
+data "aws_acm_certificate" "rsa_4096" {
+  domain = ""
+  tags = var.common_tags
+  types = ["ISSUED"]
+  most_recent = true
 }
