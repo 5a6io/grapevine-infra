@@ -18,7 +18,7 @@ module "alb" {
   sg_alb_id = module.sg.sg_alb_id
   health_check_path = var.health_check_path
   services = module.ecs_service.service_arns
-  alb_certificate_arn = data.aws_acm_certificate.rsa.arn
+  alb_certificate_arn = data.aws_acm_certificate.rsa_4096.arn
 }
 
 data "aws_acm_certificate" "rsa_4096" {
