@@ -10,7 +10,7 @@ module "ecs_cluster" {
     enable_fargate = var.enable_fargate
     enable_ec2 = var.enable_ec2
 
-    ecs_instance_sg_ids = module.sg.sg_ec2_instance_id
+    ecs_instance_sg_ids = module.sg.sg_ec2_instance_ids
     instance_type = var.instance_type
     instance_profile_arn = module.iam.instance_profile_arn
     max_size = var.max_size
@@ -26,16 +26,24 @@ module "ecs_task_definition" {
     common_tags = var.common_tags
 
     region = var.region
+    # service_definitions = {
+    #     for svc, def in var.service_definitions :
+    #     svc => merge(def, {
+    #         image = "${lookup(module.ecr.repository_urls, svc, module.ecr.repository_names["test"])}:latest" #레파지토리 이름 수정 필요
+    #         env_map = lookup(def, "env", var.environment)
+    #     })
+    # }
     service_definitions = {
         for svc, def in var.service_definitions :
         svc => merge(def, {
-            image = "${lookup(module.ecr.repository_urls, svc, module.ecr.repository_names["test"])}:latest" #레파지토리 이름 수정 필요
-            env_map = lookup(def, "env", var.environment)
+            image   = "${lookup(module.ecr.repository_urls, svc, module.ecr.repository_names["test"])}:latest"
+            env_map = try(def.env, var.environment, {})
         })
     }
     ecs_task_execution_role_arn = module.iam.ecs_task_execution_role
     ecs_task_role_arns = module.iam.ecs_task_role
-    ecs_log_group_names = module.cloudwatch.cloudwatch_ecs_log_group_names
+
+    # ecs_log_group_names = module.cloudwatch.cloudwatch_ecs_log_group_names
 }
 
 module "ecs_service" {
