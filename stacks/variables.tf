@@ -99,7 +99,7 @@ variable "min_size" {
   type = number
 }
 
-variable "desired_count" {
+variable "desired_capacity" {
   type = number
 }
 
