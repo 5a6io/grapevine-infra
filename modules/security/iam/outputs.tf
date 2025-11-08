@@ -3,7 +3,7 @@ output "ecs_task_execution_role" {
 }
 
 output "ecs_task_role" {
-  value = aws_iam_role.ecs_task_role.arn
+  value = { for name, role in aws_iam_role.ecs_task_role : name => role.arn }
 }
 
 output "ecs_instance_role" {
