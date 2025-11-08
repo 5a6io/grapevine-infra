@@ -3,7 +3,7 @@ variable "name" {
 }
 
 variable "common_tags" {
-  type = map(list())
+  type = map(string)
   default = {}
 }
 
@@ -21,16 +21,16 @@ variable "log_groups" {
   }))
 }
 
-variable "alarms" {
-  description = "CloudWatch CPU or Memory alarms"
-  type = map(object({
-    metric_name = string
-    namespace = string
-    comparison_operator = string
-    threshold = number
-    period = number
-    evaluation_periods = number
-    statistic = string 
-  }))
-  default = {}
-}
+# variable "alarms" {
+#   description = "CloudWatch CPU or Memory alarms"
+#   type = map(object({
+#     metric_name = string
+#     namespace = string
+#     comparison_operator = string
+#     threshold = number
+#     period = number
+#     evaluation_periods = number
+#     statistic = string 
+#   }))
+#   default = {}
+# }
