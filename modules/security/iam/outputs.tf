@@ -17,3 +17,7 @@ output "codedeploy_role" {
 output "instance_profile_arn" {
   value = aws_iam_instance_profile.instance_profile.arn
 }
+
+output "rds_proxy_role" {
+  value = aws_iam_role.rds_proxy_role.arn
+}
