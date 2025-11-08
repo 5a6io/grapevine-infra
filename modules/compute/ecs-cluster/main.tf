@@ -9,10 +9,6 @@ resource "aws_service_discovery_private_dns_namespace" "svc" {
 resource "aws_ecs_cluster" "this" {
     name = "${var.name}-ecs-cluster"
 
-    depends_on = [ 
-        aws_ecs_capacity_provider.ec2
-     ]
-
     setting {
       name = "containerInsights"
       value = "enabled"
@@ -29,12 +25,12 @@ resource "aws_ecs_cluster" "this" {
 
 
 resource "aws_ecs_capacity_provider" "ec2" {
-    count = var.enable_ec2 ? 1 : 0
+    for_each = var.enable_ec2 ? var.services : {}
 
     name = "${var.name}-ec2-capacity"
 
     auto_scaling_group_provider {
-        auto_scaling_group_arn = aws_autoscaling_group.this[0].arn
+        auto_scaling_group_arn = aws_autoscaling_group.this[each.key].arn
         managed_termination_protection = "DISABLED"
         managed_scaling {
           status = "ENABLED"
@@ -49,17 +45,17 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
     capacity_providers = [ 
       var.enable_fargate ? "FARGATE" : null,
       var.enable_fargate ? "FARGATE_SPOT" : null,
-      var.enable_ec2 ? aws_ecs_capacity_provider.ec2[0].name : null
+      var.enable_ec2 ? aws_ecs_capacity_provider.ec2["only-test"].name : null
     ]
 
     default_capacity_provider_strategy {
-      capacity_provider = var.enable_fargate ? "FARGATE" : aws_ecs_capacity_provider.ec2[0].name
+      capacity_provider = var.enable_fargate ? "FARGATE" : aws_ecs_capacity_provider.ec2["only-test"].name
       weight = 1
     }
 }
 
 resource "aws_launch_template" "this" {
-  for_each = var.enable_ec2 ? var.services : 0
+  for_each = var.enable_ec2 ? var.services : {}
   
   name = "${var.name}-${each.key}-lt"
   image_id = data.aws_ssm_parameter.ami.value
@@ -82,15 +78,15 @@ resource "aws_launch_template" "this" {
     enabled = true
   }
 
-  vpc_security_group_ids = [ var.ecs_instance_sg_ids[each.key].id ]
+  vpc_security_group_ids = [ var.ecs_instance_sg_ids[each.key] ]
 
-   user_data = base64encode(templatefile("${path.module}/ecs_user_data.sh", {
-    cluster_name = aws_ecs_cluster.name
-   }))
+  #  user_data = base64encode(templatefile("${path.module}/ecs_user_data.sh", {
+  #   cluster_name = aws_ecs_cluster.this.name
+  #  }))
 }
 
 resource "aws_autoscaling_group" "this" {
-  for_each = enable_ec2 ? var.services : 0
+  for_each = var.enable_ec2 ? var.services : {}
 
   name = "${var.name}-${each.key}-asg"
   desired_capacity = var.desired_capacity
