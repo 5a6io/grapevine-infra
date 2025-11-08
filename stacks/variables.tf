@@ -155,4 +155,3 @@ variable "log_groups" {
     retention = number
   }))
 }
->>>>>>> Stashed changes
