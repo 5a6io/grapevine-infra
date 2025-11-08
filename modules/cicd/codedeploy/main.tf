@@ -26,8 +26,8 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   app_name = aws_codedeploy_app.this.name
   deployment_group_name = "${var.name}-${each.key}-codedeploy-group"
-  deployment_config_name = aws_codedeploy_deployment_config.this.name
-  service_role_arn = aws_iam_role.codedeploy_role.arn
+  deployment_config_name = aws_codedeploy_deployment_config.this.deployment_config_name
+  service_role_arn = var.codedeploy_role_arn
 
   deployment_style {
     deployment_type = "BLUE_GREEN"
@@ -41,19 +41,19 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   ecs_service {
     cluster_name = var.ecs_cluster_name
-    service_name = aws_ecs_service.this[each.key].name
+    service_name = var.ecs_service[each.key]
   }
 
   load_balancer_info {
     target_group_pair_info {
       target_group {
-        name = aws_lb_target_group.blue[each.key].name
+        name = var.target_group_blue[each.key]
       }
       target_group {
-        name = aws_lb_target_group.green[each.key].name
+        name = var.target_group_green[each.key]
       }
       prod_traffic_route {
-        listener_arns = [ var.lb_listener_arn ]
+        listener_arns = [ var.lb_listener_arns[each.key] ]
       }
     }
   }
