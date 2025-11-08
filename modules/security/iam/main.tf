@@ -1,9 +1,4 @@
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
 # Related ECS
->>>>>>> Stashed changes
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "${var.name}-ecs-task-execution-role"
   
@@ -80,9 +75,7 @@ resource "aws_iam_instance_profile" "instance_profile" {
   tags = merge(var.common_tags, {
     name = "${var.name}-instance-profile"
   })
-<<<<<<< Updated upstream
-}
-=======
+
 }
 
 # Related CodeDeploy
@@ -105,5 +98,3 @@ resource "aws_iam_role_policy_attachment" "codedeploy" {
   role = aws_iam_role.codedeploy_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRoleForECS"
 }
->>>>>>> Stashed changes
->>>>>>> Stashed changes
