@@ -7,8 +7,8 @@ module "ecs_cluster" {
     private_subnet_ids = module.subnets.private_subnet_ids
 
     namespace = var.namespace
-    enable_fargate = true
-    enable_ec2 = true
+    enable_fargate = var.enable_fargate
+    enable_ec2 = var.enable_ec2
 
     ecs_instance_sg_ids = module.sg.ecs.ids
     instance_type = var.instance_type

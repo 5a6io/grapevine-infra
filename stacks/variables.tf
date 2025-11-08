@@ -103,6 +103,16 @@ variable "desired_capacity" {
   type = number
 }
 
+variable "enable_ec2" {
+  type = bool
+  default = false
+}
+
+variable "enable_fargate" {
+  type = bool
+  default = true
+}
+
 #alb
 variable "health_check_path" {
   type = string
@@ -124,10 +134,10 @@ variable "services" {
 }
 
 #acm
-variable "private_key" {
-  type = string
-}
+# variable "private_key" {
+#   type = string
+# }
 
-variable "certificate_body" {
-  type = string
-}
+# variable "certificate_body" {
+#   type = string
+# }
