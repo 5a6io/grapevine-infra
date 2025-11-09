@@ -39,6 +39,6 @@ variable "sg_alb_id" {
   type = string
 }
 
-variable "alb_certificate_arn" {
-  type = string
-}
+# variable "alb_certificate_arn" {
+#   type = string
+# }
