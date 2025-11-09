@@ -13,5 +13,5 @@ variable "alb_arn" {
 }
 
 variable "waf_log_group_arn" {
-  type = string
+  type = list(string)
 }
