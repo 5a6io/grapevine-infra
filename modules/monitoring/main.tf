@@ -54,3 +54,21 @@ resource "aws_cloudwatch_dashboard" "this" {
     ]
   })
 }
+
+resource "aws_cloudwatch_log_resource_policy" "this" {
+  policy_document = data.aws_iam_policy_document.example.json
+  policy_name = "webacl-policy-uniq-name"
+}
+
+data "aws_iam_policy_document" "example" {
+  version = "2012-10-17"
+  statement {
+    effect = "Allow"
+    principals {
+      identifiers = ["delivery.logs.amazonaws.com"]
+      type        = "Service"
+    }
+    actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
+    resources = concat(["${aws_cloudwatch_log_group.waf_log}:*"], var.cloudwatch_ecs_log_group)
+  }
+}

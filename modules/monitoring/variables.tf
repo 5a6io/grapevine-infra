@@ -21,6 +21,10 @@ variable "log_groups" {
   }))
 }
 
+variable "cloudwatch_ecs_log_group" {
+  type = list(string)
+}
+
 # variable "alarms" {
 #   description = "CloudWatch CPU or Memory alarms"
 #   type = map(object({
