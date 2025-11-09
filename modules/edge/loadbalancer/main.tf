@@ -59,7 +59,7 @@ resource "aws_lb_listener" "http_listener" {
 resource "aws_lb_listener_rule" "this" {
     # for_each = var.alb_certificate_arn != null ? var.services : {}
     # listener_arn = aws_lb_listener.https_listener[each.key].arn
-    listener_arn = aws_lb_listener.http_listener.arn
+    listener_arn = aws_lb_listener.http_listener[each.key].arn
     priority = index(local.service_keys, each.key) + 1
   
     condition {
