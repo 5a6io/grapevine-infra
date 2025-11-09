@@ -36,7 +36,7 @@ module "ecs_task_definition" {
     service_definitions = {
         for svc, def in var.service_definitions :
         svc => merge(def, {
-            image   = "${lookup(module.ecr.repository_urls, svc, module.ecr.repository_names[0])}:latest"
+            image   = "${lookup(module.ecr.repository_urls, svc, module.ecr.repository_names[svc])}:latest"
             env_map = try(def.env, var.environment, {})
         })
     }
