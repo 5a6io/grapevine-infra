@@ -69,7 +69,7 @@ data "aws_iam_policy_document" "example" {
       type        = "Service"
     }
     actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
-    resources = concat(waf_log_group_arns, ecs_log_group_arns)
+    resources = concat(local.waf_log_group_arns, local.ecs_log_group_arns)
   }
 }
 
