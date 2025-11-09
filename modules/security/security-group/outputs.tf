@@ -17,13 +17,13 @@ output "sg_alb_id" {
   value = aws_security_group.alb.id
 }
 
-output "sg_ecs_service_ids" {
-  value = { for name, sg in aws_security_group.ecs_service : name => sg.id }
-}
-
-# output "sg_ec2_instance_ids" {
-#   value = { for name, sg in aws_security_group.ec2_instance : name => sg.id }
+# output "sg_ecs_service_ids" {
+#   value = { for name, sg in aws_security_group.ecs_service : name => sg.id }
 # }
+
+output "sg_ec2_instance_ids" {
+  value = { for name, sg in aws_security_group.ec2_instance : name => sg.id }
+}
 
 output "sg_ecs_id" {
   value = aws_security_group.ecs.id
