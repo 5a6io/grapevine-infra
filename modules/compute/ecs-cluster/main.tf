@@ -80,9 +80,12 @@ resource "aws_launch_template" "this" {
 
   vpc_security_group_ids = [ var.ecs_instance_sg_ids[each.key] ]
 
-  #  user_data = base64encode(templatefile("${path.module}/ecs_user_data.sh", {
-  #   cluster_name = aws_ecs_cluster.this.name
-  #  }))
+  user_data = base64encode(
+  <<EOF
+    #!/bin/bash
+    echo "ECS_CLUSTER = ${aws_ecs_cluster.this.name}" >> /etc/ecs/ecs.config
+  EOF
+   )
 }
 
 resource "aws_autoscaling_group" "this" {
