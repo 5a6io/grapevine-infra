@@ -2,7 +2,7 @@ name: 'Terraform Cloud Trigger'
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 permissions:
   contents: read
