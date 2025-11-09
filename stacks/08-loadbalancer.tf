@@ -31,10 +31,10 @@ module "alb" {
 # }
 
 # WAF
-module "waf" {
-  source = "../modules/security/waf"
-  name = var.name
-  common_tags = var.common_tags
-  alb_arn = module.alb.alb_arn
-  waf_log_group_arn = [ "${module.cloudwatch.cloudwatch_waf_log_group_arn}:*" ]
-}
+# module "waf" {
+#   source = "../modules/security/waf"
+#   name = var.name
+#   common_tags = var.common_tags
+#   alb_arn = module.alb.alb_arn
+#   waf_log_group_arn = [ "${module.cloudwatch.cloudwatch_waf_log_group_arn}:*" ]
+# }
