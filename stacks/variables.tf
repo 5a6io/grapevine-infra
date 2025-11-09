@@ -155,6 +155,6 @@ variable "log_groups" {
   }))
 }
 
-variable "alb_ca_arn" {
-  type = string
-}
+# variable "alb_ca_arn" {
+#   type = string
+# }

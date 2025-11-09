@@ -13,18 +13,24 @@ resource "aws_lb" "this" {
 }
 
 resource "aws_lb_listener" "http_listener" {
+  for_each = var.services
   load_balancer_arn = aws_lb.this.arn
   port = 80
   protocol = "HTTP"
 
-  default_action {
-    type = "redirect"
+  # default_action {
+  #   type = "redirect"
 
-    redirect {
-      port = 443
-      protocol = "HTTPS"
-      status_code = "HTTP_301"
-    }
+  #   redirect {
+  #     port = 443
+  #     protocol = "HTTPS"
+  #     status_code = "HTTP_301"
+  #   }
+  # }
+
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.blue[each.key].arn
   }
 
   tags = merge(var.common_tags, {
@@ -32,27 +38,29 @@ resource "aws_lb_listener" "http_listener" {
   })
 }
 
-resource "aws_lb_listener" "https_listener" {
-  for_each = var.services
-  load_balancer_arn = aws_lb.this.arn
-  port  = 443
-  protocol = "HTTPS"
-  ssl_policy = "ELBsecurity-2016-08"
-  certificate_arn = var.alb_certificate_arn
+# resource "aws_lb_listener" "https_listener" {
+#   for_each = var.services
+#   load_balancer_arn = aws_lb.this.arn
+#   port  = 443
+#   protocol = "HTTPS"
+#   ssl_policy = "ELBsecurity-2016-08"
+#   certificate_arn = var.alb_certificate_arn
   
-  default_action {
-    type = "forward"
-    target_group_arn = aws_lb_target_group.blue[each.key].arn
-  }
+#   default_action {
+#     type = "forward"
+#     target_group_arn = aws_lb_target_group.blue[each.key].arn
+#   }
 
-  tags = merge(var.common_tags, {
-    Name = "${var.name}-lb-https-listener"
-  })
-}
+#   tags = merge(var.common_tags, {
+#     Name = "${var.name}-lb-https-listener"
+#   })
+# }
 
 resource "aws_lb_listener_rule" "this" {
-    for_each = var.alb_certificate_arn != null ? var.services : {}
-    listener_arn = aws_lb_listener.https_listener[each.key].arn
+    # for_each = var.alb_certificate_arn != null ? var.services : {}
+    # listener_arn = aws_lb_listener.https_listener[each.key].arn
+    for_each = var.services
+    listener_arn = aws_lb_listener.http_listener[each.key].arn
     priority = index(local.service_keys, each.key) + 1
   
     condition {

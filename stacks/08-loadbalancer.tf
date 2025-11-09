@@ -20,7 +20,7 @@ module "alb" {
   # services = module.ecs_service.service_arns
   services = var.services
   # alb_certificate_arn = data.aws_acm_certificate.rsa_4096.arn
-  alb_certificate_arn = var.alb_ca_arn
+  # alb_certificate_arn = var.alb_ca_arn
 }
 
 # data "aws_acm_certificate" "rsa_4096" {
