@@ -20,8 +20,8 @@ jobs:
       - name: Trigger Terraform Cloud Run via API
         env:
           TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-          TFC_ORG: test-terraform-cloud-grapevine       # 👉 Terraform Cloud Organization 이름
-          TFC_WORKSPACE: test                           # 👉 Terraform Cloud Workspace 이름
+          TFC_ORG: Softbank-hackathon-Grape
+          TFC_WORKSPACE: grapevine-infra
         run: |
           # 1️⃣ 워크스페이스 ID 조회
           echo "Fetching workspace ID..."
