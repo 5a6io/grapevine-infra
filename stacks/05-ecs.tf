@@ -10,7 +10,7 @@ module "ecs_cluster" {
     enable_fargate = var.enable_fargate
     enable_ec2 = var.enable_ec2
 
-    ecs_instance_sg_ids = module.sg.sg_ec2_instance_ids
+    ecs_instance_sg_ids = module.sg.sg_ecs_id
     instance_type = var.instance_type
     instance_profile_arn = module.iam.instance_profile_arn
     max_size = var.max_size
