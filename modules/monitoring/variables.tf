@@ -22,7 +22,7 @@ variable "log_groups" {
 }
 
 variable "cloudwatch_ecs_log_group" {
-  type = list(string)
+  type = map(string)
 }
 
 # variable "alarms" {
