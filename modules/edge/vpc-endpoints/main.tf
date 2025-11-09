@@ -9,9 +9,9 @@ resource "aws_vpc_endpoint" "s3_gw" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "s3_gw_assoc" {
-  for_each        = toset(var.private_route_table_ids)
-  route_table_id  = each.value
-  vpc_endpoint_id = aws_vpc_endpoint.s3_gw.id
+  count             = length(var.private_route_table_ids)
+  vpc_endpoint_id   = aws_vpc_endpoint.s3_gw.id
+  route_table_id    = var.private_route_table_ids[count.index]
 }
 
 # 1) ECR API

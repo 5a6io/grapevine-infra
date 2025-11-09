@@ -19,16 +19,24 @@ variable "service_definitions" {
       to = string
       port = number
     }))
+    launch_type  = optional(string, "FARGATE")
     cpu = string
     memory = string
     image = string
-    env_map = optional(map(string))
+    env_map = map(string)
+    log_retention = number
+    desired_count = optional(number, 1)
   }))
 }
 
 variable "environment" {
-  type = list(string)
-  default = [  ]
+  description = "Default environment variables for ECS containers"
+  type        = map(string)
+  default = {
+    SPRING_PROFILES_ACTIVE = "dev"
+    AWS_REGION             = "ap-northeast-2"
+    TZ                     = "Asia/Seoul"
+  }
 }
 
 variable "ecs_task_execution_role_arn" {
@@ -39,6 +47,12 @@ variable "ecs_task_role_arns" {
   type = map(string)
 }
 
-variable "ecs_log_group_names" {
-  type = map(string)
-}
+# variable "ecs_log_group_names" {
+#   type = map(string)
+# }
+
+# variable "log_groups" {
+#   type = map(object({
+#     retention = number
+#   }))
+# }

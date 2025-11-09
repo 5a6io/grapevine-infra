@@ -15,16 +15,21 @@ variable "cluster_arn" {
 }
 
 variable "service_definitions" {
-    type = map(object({
+  type = map(object({
+    port = number
+    ingress_from = string
+    egress = list(object({
+      to = string
       port = number
-      ingress_from = string
-      egress = list(object({
-        to = string
-        port = number
-      }))
-      cpu = string
-      memory = string
     }))
+    launch_type  = optional(string, "FARGATE")
+    cpu = string
+    memory = string
+    image = string
+    env_map = map(string)
+    log_retention = number
+    desired_count = optional(number, 1)
+  }))
 }
 
 variable "task_definition_arns" {

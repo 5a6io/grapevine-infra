@@ -42,14 +42,14 @@ resource "aws_ecs_capacity_provider" "ec2" {
 resource "aws_ecs_cluster_capacity_providers" "this" {
     cluster_name = aws_ecs_cluster.this.name
 
-    capacity_providers = [ 
+    capacity_providers = compact([
       var.enable_fargate ? "FARGATE" : null,
       var.enable_fargate ? "FARGATE_SPOT" : null,
       var.enable_ec2 ? aws_ecs_capacity_provider.ec2["only-test"].name : null
-    ]
+    ])
 
     default_capacity_provider_strategy {
-      capacity_provider = var.enable_fargate ? "FARGATE" : aws_ecs_capacity_provider.ec2["only-test"].name
+      capacity_provider = var.enable_ec2 ? values(aws_ecs_capacity_provider.ec2)[0].name : null
       weight = 1
     }
 }
