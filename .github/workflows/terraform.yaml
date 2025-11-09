@@ -1,0 +1,65 @@
+name: 'Terraform Cloud Trigger'
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  trigger-tfc:
+    name: 'Trigger Terraform Cloud Run'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Terraform Cloud Run 트리거 API 호출
+      - name: Trigger Terraform Cloud Run via API
+        env:
+          TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+          TFC_ORG: test-terraform-cloud-grapevine       # 👉 Terraform Cloud Organization 이름
+          TFC_WORKSPACE: test                           # 👉 Terraform Cloud Workspace 이름
+        run: |
+          # 1️⃣ 워크스페이스 ID 조회
+          echo "Fetching workspace ID..."
+          workspace_id=$(curl -s \
+            --header "Authorization: Bearer $TF_API_TOKEN" \
+            --header "Content-Type: application/vnd.api+json" \
+            https://app.terraform.io/api/v2/organizations/${TFC_ORG}/workspaces/${TFC_WORKSPACE} \
+            | jq -r '.data.id')
+
+          echo "Workspace ID: $workspace_id"
+
+          # 2️⃣ Terraform Cloud Run 생성
+          echo "Triggering run..."
+          run_response=$(curl -s \
+            --header "Authorization: Bearer $TF_API_TOKEN" \
+            --header "Content-Type: application/vnd.api+json" \
+            --request POST \
+            --data '{
+              "data": {
+                "attributes": {
+                  "is-destroy": false,
+                  "message": "Triggered via GitHub Actions (main branch push)"
+                },
+                "type": "runs",
+                "relationships": {
+                  "workspace": {
+                    "data": {
+                      "type": "workspaces",
+                      "id": "'"${workspace_id}"'"
+                    }
+                  }
+                }
+              }
+            }' \
+            https://app.terraform.io/api/v2/runs)
+
+          echo "Run response: $run_response"
+
+          # 3️⃣ 생성된 Run URL 출력
+          run_url=$(echo "$run_response" | jq -r '.data.links."self"')
+          echo "✅ Run created: https://app.terraform.io${run_url}"
