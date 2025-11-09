@@ -69,6 +69,15 @@ data "aws_iam_policy_document" "example" {
       type        = "Service"
     }
     actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
-    resources = concat(["${aws_cloudwatch_log_group.waf_log}:*"], var.cloudwatch_ecs_log_group)
+    resources = concat(local.waf_log_group_arns, local.ecs_log_group_arns)
   }
+}
+
+locals {
+  waf_log_group_arns = [
+    for _, lg in aws_cloudwatch_log_group.waf_log:
+    "${lg.arn}:*"
+  ]
+
+  ecs_log_group_arns = values(var.cloudwatch_ecs_log_group)
 }
