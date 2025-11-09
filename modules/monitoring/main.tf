@@ -75,8 +75,8 @@ data "aws_iam_policy_document" "example" {
 
 locals {
   waf_log_group_arns = [
-    for _, lg in aws_cloudwatch_log_group.waf_log:
-    "${lg.arn}:*"
+    for _, arn in aws_cloudwatch_log_group.waf_log:
+    "${arn}:*"
   ]
 
   ecs_log_group_arns = values(var.cloudwatch_ecs_log_group)
