@@ -36,7 +36,8 @@ module "ecs_task_definition" {
     service_definitions = {
         for svc, def in var.service_definitions :
         svc => merge(def, {
-            image   = "${lookup(module.ecr.repository_urls, svc, module.ecr.repository_names[svc])}:latest"
+            # image   = "${lookup(module.ecr.repository_urls, svc, module.ecr.repository_names[svc])}:latest"
+            image = "960462006250.dkr.ecr.ap-northeast-2.amazonaws.com/deploy-project/deploy-project:latest"
             env_map = try(def.env, var.environment, {})
         })
     }
