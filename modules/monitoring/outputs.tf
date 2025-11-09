@@ -11,11 +11,11 @@ output "cloudwatch_ecs_log_group_arns" {
 }
 
 output "cloudwatch_waf_log_group_name" {
-  value = aws_cloudwatch_log_group.waf_log.name
+  value = { for k, v in aws_cloudwatch_log_group.waf_log : k => v.name}
 }
 
 output "cloudwatch_waf_log_group_arn" {
-  value = aws_cloudwatch_log_group.waf_log.arn
+   value = { for name, lg in aws_cloudwatch_log_group.waf_log : name => lg.arn }
 }
 
 # output "cloudwatch_alarm_names" {

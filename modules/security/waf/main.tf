@@ -184,6 +184,6 @@ resource "aws_wafv2_web_acl_association" "this" {
 }
 
 resource "aws_wafv2_web_acl_logging_configuration" "this" {
-  log_destination_configs = [ var.waf_log_group_arn ]
+  log_destination_configs = var.waf_log_group_arn
   resource_arn = aws_wafv2_web_acl.this.arn
 }
