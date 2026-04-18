@@ -74,10 +74,9 @@ data "aws_iam_policy_document" "example" {
 }
 
 locals {
-  # CloudWatch WAF Log Groups → ARN + ":*" 형식으로 변환
+  # 단일 WAF 로그 그룹 ARN에 로그 스트림 와일드카드를 추가
   waf_log_group_arns = [
-    for name, lg in aws_cloudwatch_log_group.waf_log :
-    "${lg.arn}:*"
+    "${aws_cloudwatch_log_group.waf_log.arn}:*"
   ]
 
   # ECS 로그 그룹은 var로 받은 map(string)이므로 그대로 values() 사용 가능
