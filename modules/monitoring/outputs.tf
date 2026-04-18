@@ -1,5 +1,5 @@
 output "cloudwatch_dashboard_url" {
-  value = "https://${var.region}.consol.aws.amazon.com/cloudwatch/home?region=${var.region}#dashboards:name=${aws_cloudwatch_dashboard.this.dashboard_name}"
+  value = "https://${var.region}.console.aws.amazon.com/cloudwatch/home?region=${var.region}#dashboards:name=${aws_cloudwatch_dashboard.this.dashboard_name}"
 }
 
 output "cloudwatch_ecs_log_group_names" {
